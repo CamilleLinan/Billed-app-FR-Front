@@ -2,13 +2,12 @@
  * @jest-environment jsdom
  */
 
-import { fireEvent, screen, waitFor } from "@testing-library/dom"
+import { fireEvent, screen, waitFor } from "@testing-library/dom";
 import { localStorageMock } from "../__mocks__/localStorage.js";
-import userEvent from '@testing-library/user-event'
 import { ROUTES, ROUTES_PATH } from "../constants/routes.js";
 import { bills } from "../fixtures/bills.js";
-import NewBillUI from "../views/NewBillUI.js"
-import NewBill from "../containers/NewBill.js"
+import NewBillUI from "../views/NewBillUI.js";
+import NewBill from "../containers/NewBill.js";
 import mockStore from "../__mocks__/store";
 
 import router from "../app/Router.js";
@@ -107,6 +106,7 @@ describe("Given I am connected as an employee", () => {
     });
   });
 
+  // TEST API POST
   describe("When I have filled in the form correctly and I clicked on submit button", () => {
     test("Then Bills page should be rendered", () => {
       const newBill = new NewBill({
@@ -125,4 +125,4 @@ describe("Given I am connected as an employee", () => {
       expect(screen.getByText("Mes notes de frais")).toBeTruthy();
     });
   });
-})
+});
