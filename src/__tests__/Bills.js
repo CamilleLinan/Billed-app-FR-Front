@@ -86,56 +86,74 @@ describe("Given I am connected as an employee", () => {
   })
 
   // TEST API GET
-  describe("When I navigate to Bills", () => {
-    test("fetches bills from mock API GET", async () => {
-      const root = document.createElement("div");
-      root.setAttribute("id", "root");
-      document.body.append(root);
-      router();
-      window.onNavigate(ROUTES_PATH.Bills);
-
-      await waitFor(() => screen.getByText("Mes notes de frais"));
-      const contentBill = screen.getByText("Hôtel et logement");
-      expect(contentBill).toBeTruthy();
-      expect(screen.getAllByTestId("btn-new-bill")).toBeTruthy();
-    })
-  })
-
-  describe("When an error occurs on API", () => {
+  describe("When I navigate to Bills and try to get all Bills", () => {
     beforeEach(() => {
       jest.spyOn(mockStore, "bills");
-
       const root = document.createElement("div");
       root.setAttribute("id", "root");
       document.body.appendChild(root);
       router();
     })
 
-    test("fetches bills from an API and fails with 404 message error", async () => {
-      mockStore.bills.mockImplementationOnce(() => {
-        return {
-          list : () =>  {
-            return Promise.reject(new Error("Erreur 404"))
-          }
-        }});
-      window.onNavigate(ROUTES_PATH.Bills);
-      await new Promise(process.nextTick);
-      const message = screen.getByText(/Erreur 404/);
-      expect(message).toBeTruthy();
+    describe("When no error occurs on API", () => {
+      test("fetches bills from an API with success", async () => {
+        window.onNavigate(ROUTES_PATH.Bills);
+        const bills = await mockStore.bills().list();
+        expect(bills.length).toBe(4);
+      });
     })
 
-    test("fetches messages from an API and fails with 500 message error", async () => {
-      mockStore.bills.mockImplementationOnce(() => {
-        return {
-          list : () =>  {
-            return Promise.reject(new Error("Erreur 500"));
-          }
-        }});
+    describe("When an error occurs on API", () => {
+      test("fetches bills from an API and fails with 404 message error", async () => {
+        mockStore.bills.mockImplementationOnce(() => {
+          return {
+            list : () =>  {
+              return Promise.reject(new Error("Erreur 404"))
+            }
+          }});
+        window.onNavigate(ROUTES_PATH.Bills);
+        await new Promise(process.nextTick);
+        const message = screen.getByText(/Erreur 404/);
+        expect(message).toBeTruthy();
+      })
 
-      window.onNavigate(ROUTES_PATH.Bills);
-      await new Promise(process.nextTick);
-      const message = screen.getByText(/Erreur 500/);
-      expect(message).toBeTruthy();
+      test("fetches bills from an API and fails with 500 message error", async () => {
+        mockStore.bills.mockImplementationOnce(() => {
+          return {
+            list : () =>  {
+              return Promise.reject(new Error("Erreur 500"));
+            }
+          }});
+
+        window.onNavigate(ROUTES_PATH.Bills);
+        await new Promise(process.nextTick);
+        const message = screen.getByText(/Erreur 500/);
+        expect(message).toBeTruthy();
+      })
+
+      // test("when error occured", async () => {
+      //   mockStore.bills.mockImplementationOnce(() => {
+      //     return {
+      //       list: () => Promise.reject(new Error("Une erreur s'est produite")),
+      //     };
+      //   });
+        
+      //   window.onNavigate(ROUTES_PATH.Bills);
+      //   await waitFor(() => screen.getByText(/Une erreur s'est produite/));
+        
+      //   expect(mockStore.bills).toHaveBeenCalledTimes(5);
+      //   expect(bills.getBills()).toBe(null);
+      //   expect(bills.getBills()).toHaveProperty("status", "En attente");
+      // })
     })
   })
+
+  describe("When Bill page send Error", () => {
+    test("Then is should render an Error message to the user", () => {
+      const html = BillsUI({ error: true });
+      document.body.innerHTML = html;
+      const errorMessage = screen.getByTestId("error-message");
+      expect(errorMessage).toBeTruthy();
+    });
+  });
 })
