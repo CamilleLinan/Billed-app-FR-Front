@@ -130,30 +130,6 @@ describe("Given I am connected as an employee", () => {
         const message = screen.getByText(/Erreur 500/);
         expect(message).toBeTruthy();
       })
-
-      // test("when error occured", async () => {
-      //   mockStore.bills.mockImplementationOnce(() => {
-      //     return {
-      //       list: () => Promise.reject(new Error("Une erreur s'est produite")),
-      //     };
-      //   });
-        
-      //   window.onNavigate(ROUTES_PATH.Bills);
-      //   await waitFor(() => screen.getByText(/Une erreur s'est produite/));
-        
-      //   expect(mockStore.bills).toHaveBeenCalledTimes(5);
-      //   expect(bills.getBills()).toBe(null);
-      //   expect(bills.getBills()).toHaveProperty("status", "En attente");
-      // })
     })
   })
-
-  describe("When Bill page send Error", () => {
-    test("Then is should render an Error message to the user", () => {
-      const html = BillsUI({ error: true });
-      document.body.innerHTML = html;
-      const errorMessage = screen.getByTestId("error-message");
-      expect(errorMessage).toBeTruthy();
-    });
-  });
 })

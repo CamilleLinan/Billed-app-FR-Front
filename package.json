@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "test": "jest --coverage --noStackTrace --silent"
+    "test-coverage": "jest --coverage --noStackTrace --silent",
+    "test-reporter": "jest --noStackTrace --silent"
   },
   "jest": {
     "verbose": false,
@@ -14,7 +15,8 @@
       "!**/external/**",
       "!**/fixtures/**",
       "!**/lcov-report/**"
-    ]
+    ],
+    "reporters": ["default", "jest-html-reporter"]
   },
   "type": "module",
   "dependencies": {
