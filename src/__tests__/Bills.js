@@ -99,7 +99,9 @@ describe("Given I am connected as an employee", () => {
       test("fetches bills from an API with success", async () => {
         window.onNavigate(ROUTES_PATH.Bills);
         const bills = await mockStore.bills().list();
+        const billIsPresent = screen.getAllByText("Hôtel et logement");
         expect(bills.length).toBe(4);
+        expect(billIsPresent).toBeTruthy();
       });
     })
 
